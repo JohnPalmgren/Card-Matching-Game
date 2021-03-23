@@ -1,0 +1,130 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: #2f692f;
+    font-family: "Montserrat", sans-serif;
+}
+
+h1 {
+    margin: 0 0 1rem;
+    text-align: center;
+    color: #fff;
+    padding-top: 1rem;
+    
+}
+
+
+#time {
+    display: inline-block;
+    width: 40%;
+
+}
+
+.text {
+    color: #fff;
+}
+
+#your-time {
+    font-size: 2rem;
+    width: 100%;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+
+#mode {
+    width: 7rem;
+    height:2.5rem;
+    background-color: #7777e7;
+    color: #fff;
+    margin: auto;
+    position: relative;
+    top: 1rem;
+    /* vertical-align: middle;
+    align-self: center; */
+}
+
+#score,
+#highscore {
+    font-size: 1.4rem;   
+    padding-right: 2rem;
+}
+
+.hidden {
+    display: none;
+}
+
+#cards {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: center;
+}
+
+.card {
+    width: 6rem;
+    height: 8rem;
+    margin: 0.5rem;
+    background-size: 80%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #fff;
+}
+
+
+
+.html {
+    background-image: url(images/html-5.png);
+    background-color: yellow;
+}
+
+.css {
+    background-image: url(images/css.png);
+    background-color: blue;
+}
+
+.js {
+    background-image: url(images/javascript.png);
+    background-color: cyan;
+}
+
+.sass {
+    background-image: url(images/sass.png);
+    background-color: green;
+}
+
+.node {
+    background-image: url(images/nodejs.png);
+    background-color: orange;
+}
+
+.react {
+    background-image: url(images/react.png);
+    background-color:pink;
+}
+
+.ruby {
+    background-image: url(images/ruby.png);
+    background-color: wheat;
+}
+
+.python {
+    background-image: url(images/python.png);
+    background-color: grey;
+}
+
+.background {
+    background-image: url(images/back-of-card.jpg);
+    background-size: 100%;
+    background-color: #fff;
+    background-repeat: repeat;
+    background-position: initial;
+}

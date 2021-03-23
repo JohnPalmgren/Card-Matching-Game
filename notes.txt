@@ -1,0 +1,2 @@
+fix bug -- click on turned over card for turned
+use matchlist (cardtype) rather than remove event listener
