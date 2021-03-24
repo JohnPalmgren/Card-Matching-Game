@@ -1,2 +1,2 @@
 fix bug -- click on turned over card for turned
-use matchlist (cardtype) rather than remove event listener
+need to get rid of bind. alternative could be to create indexed card object. 

@@ -1,9 +1,8 @@
-// "use strict";
+"use strict";
 
 const cards = document.querySelectorAll(".card");
-// const cards = document.getElementsByClassName("card");
-
 const mode = document.getElementById("mode");
+const timerText = document.getElementById("time");
 
 let numOfCards = 8;
 let firstCard = true;
@@ -13,58 +12,62 @@ let cardOneType = null;
 let cardTwoType = null;
 let cardOne = null;
 let cardTwo = null;
+let currentIndex = null;
+let removeListener = null;
 
-const matchedList = []
+let startTime;
+let timeElapsed = 0;
+let timerInterval;
 
-// !matchedList.includes(cardType)
+let score = 0;
+let highScore = 0;
+let topScore = 5000;
 
-const changeCardSize = size => {
-
+const changeCardSize = (size) => {
   // Only change card size if on mobile device
-  const maxWidth = window.matchMedia("(max-width: 425px)")
+  const maxWidth = window.matchMedia("(max-width: 425px)");
 
   if (maxWidth.matches) {
     // can I use switch case?
     if (size === "large") {
-      cards.forEach(card => {
+      cards.forEach((card) => {
         card.style.width = "6rem";
         card.style.height = "8rem";
-      })
-    };
-  
+      });
+    }
+
     if (size === "medium") {
-      cards.forEach(card => {
+      cards.forEach((card) => {
         card.style.width = "4rem";
         card.style.height = "6rem";
       });
-    };
-  
+    }
+
     if (size === "small") {
-      cards.forEach(card => {
+      cards.forEach((card) => {
         card.style.width = "3rem";
         card.style.height = "5rem";
       });
-    };
-  };
+    }
+  }
 };
 
 const setMode = () => {
+  const mediumCards = document.querySelectorAll(".medium");
+  const hardCards = document.querySelectorAll(".hard");
 
-  const mediumCards = document.querySelectorAll(".medium")
-  const hardCards = document.querySelectorAll(".hard")
-  
   //turnery function??
   if (mode.value === "easy") {
     changeCardSize("large");
     numOfCards = 8;
     //turn into reusable function
-    mediumCards.forEach(card => {
+    mediumCards.forEach((card) => {
       card.classList.add("hidden");
     });
-    hardCards.forEach(card => {
+    hardCards.forEach((card) => {
       card.classList.add("hidden");
     });
-  };
+  }
 
   if (mode.value === "medium") {
     changeCardSize("medium");
@@ -72,28 +75,23 @@ const setMode = () => {
     mediumCards.forEach((card) => {
       card.classList.remove("hidden");
     });
-    hardCards.forEach(card => {
+    hardCards.forEach((card) => {
       card.classList.add("hidden");
     });
-
-
-  };
+  }
 
   if (mode.value === "hard") {
     changeCardSize("small");
-    numOfCards = 16
+    numOfCards = 16;
     mediumCards.forEach((card) => {
       card.classList.remove("hidden");
     });
-    hardCards.forEach(card => {
+    hardCards.forEach((card) => {
       card.classList.remove("hidden");
     });
-  };
+  }
   shuffle();
 };
-
-mode.addEventListener("click", setMode);
-
 
 const cardOrder = () => {
   const order = new Set();
@@ -106,7 +104,7 @@ const cardOrder = () => {
 const shuffle = () => {
   const orderList = cardOrder();
   let count = 0;
-  cards.forEach(card => {
+  cards.forEach((card) => {
     card.style.order = orderList[count];
     count++;
   });
@@ -118,21 +116,23 @@ const checkMatch = (cardName, cardType) => {
   if (cardOneType === cardTwoType) {
     // Keep cards displayed
 
-    matchedList.push(cardType);
-
     cardOne.classList.remove("background");
     cardTwo.classList.remove("background");
     matched = true;
+    removeListener = true;
     numMatched++;
     return true;
   } else {
     matched = false;
     return false;
-  };
+  }
 };
 
-const displayCard = (cardName, cardType) => {
+const displayCard = () => {
+  const cardName = cards[currentIndex].id;
+  const cardType = cards[currentIndex].className.split(" ", 1).toString();
   const card = document.getElementById(cardName);
+
   if (firstCard) {
     // if cards not null hide revealed cards
     if (cardOne && cardTwo && !matched) {
@@ -141,7 +141,7 @@ const displayCard = (cardName, cardType) => {
     }
 
     cardOneType = cardType;
-    cardOne = document.getElementById(cardName);
+    cardOne = card;
     card.classList.remove("background");
     firstCard = false;
   } else {
@@ -150,7 +150,6 @@ const displayCard = (cardName, cardType) => {
       return;
     } else {
       card.classList.remove("background");
-      //set mach to false??
     }
   }
 };
@@ -159,121 +158,73 @@ const gameReset = () => {
   if (numMatched === numOfCards / 2) {
     stopTimer();
     displayScore();
-    cards.forEach(card => card.classList.add("background"));
     numMatched = 0;
     cardOneType = null;
     cardTwoType = null;
     cardOne = null;
     cardTwo = null;
+    removeListener = false;
+    cards.forEach((card) => {
+      card.classList.add("background");
+      card.removeEventListener("click", cardSelectHandler);
+      card.addEventListener("click", cardSelectHandler);
+    });
     shuffle();
   }
 };
 
-const cardSelectHandler = (cardName, cardType) => {
-  // console.log(matched, cardOne, cardTwo)
-  // if (matched) {
-  //   cardOne.removeEventListener("click", cardSelectHandler);
-  //   cardTwo.removeEventListener("click", cardSelectHandler);
-  // }
+const cardSelectHandler = () => {
   if (!cardOne) {
     startTimer();
-    displayTime()
+    displayTime();
   }
-  displayCard(cardName, cardType);
+  displayCard();
   gameReset();
 };
 
-// return both values in one function
-const getCardIndex = cardNum => {
-  let index;
-  let count = 0;
-  if (cardNum === 1) {
-    cards.forEach(card => {
-      if (card === cardOne) {
-        index = count;
-      };
-    count++
-    })
-  } else if (cardNum === 2) {
-    cards.forEach(card => {
-      if (card === cardTwo) {
-        index = count;
-      };
-    count++
-    });
-  };
-  return index;
-};
-
-//why doesn't this work
-//remove as redundant
 const removeListenerHandler = () => {
-  if (matched) {
-      cards[getCardIndex(1)].removeEventListener("click", cardSelectHandler);
-      cards[getCardIndex(2)].removeEventListener("click", cardSelectHandler);  
-      console.log("function runs")
-    };
+  if (removeListener) {
+    cardOne.removeEventListener("click", cardSelectHandler);
+    cardTwo.removeEventListener("click", cardSelectHandler);
+  }
+  removeListener = false;
 };
 
-
-
-cards.forEach(card => {
-  const cardType = card.className.split(" ", 1).toString();
-  const cardName = card.id;
-  card.addEventListener("click", cardSelectHandler.bind(self, cardName, cardType),
-  );
-  card.addEventListener("click", removeListenerHandler);
-});
-
-
-
-shuffle();
-
-
-const timerText = document.getElementById("time");
-
-let startTime;
-let timeElapsed = 0;
-let timerInterval;
+const cardIndexHandler = (index) => (currentIndex = index);
 
 const startTimer = () => {
-    startTime = Date.now();
-    timerInterval = setInterval(() => {
-        timeElapsed = Date.now() - startTime;
-        displayTime(timeElapsed);
-    }, 10)
-}
+  startTime = Date.now();
+  timerInterval = setInterval(() => {
+    timeElapsed = Date.now() - startTime;
+    displayTime(timeElapsed);
+  }, 10);
+};
 
 const stopTimer = () => clearInterval(timerInterval);
 
-const timeFormat = time => {
-    const hrs = time / 3600000;
-    const hh = Math.floor(hrs);
+const timeFormat = (time) => {
+  const hrs = time / 3600000;
+  const hh = Math.floor(hrs);
 
-    const min = (hrs - hh) * 60;
-    const mm = Math.floor(min);
+  const min = (hrs - hh) * 60;
+  const mm = Math.floor(min);
 
-    const sec = (min -mm) * 60;
-    const ss = Math.floor(sec);
+  const sec = (min - mm) * 60;
+  const ss = Math.floor(sec);
 
-    const msec = (sec - ss) * 100;
-    const ms = Math.floor(msec)
+  const msec = (sec - ss) * 100;
+  const ms = Math.floor(msec);
 
-    const formattedMM = mm.toString().padStart(2, "0");
-    const formattedSS = ss.toString().padStart(2, "0");
-    const formattedMS = ms.toString().padStart(2, "0");
+  const formattedMM = mm.toString().padStart(2, "0");
+  const formattedSS = ss.toString().padStart(2, "0");
+  const formattedMS = ms.toString().padStart(2, "0");
 
-    return `${formattedMM}:${formattedSS}:${formattedMS}`
-}
+  return `${formattedMM}:${formattedSS}:${formattedMS}`;
+};
 
 const displayTime = (time) => {
-        timerText.innerText = timeFormat(time);
-}
-
-
-let score = 0;
-let highScore = 0;
-let topScore = 5000;
+  timerText.innerText = timeFormat(time);
+};
 
 const getScore = () => {
   let devisor;
@@ -283,7 +234,7 @@ const getScore = () => {
     devisor = 15;
   } else {
     devisor = 18;
-  };
+  }
 
   const num = Math.round(timeElapsed / devisor);
   score = topScore - num;
@@ -292,15 +243,27 @@ const getScore = () => {
 const getHighScore = () => {
   if (score > highScore) {
     highScore = score;
-  };
+  }
 };
 
 const displayScore = () => {
-  getScore()
-  getHighScore()
+  getScore();
+  getHighScore();
   const scoreEl = document.getElementById("score-num");
   const highScoreEl = document.getElementById("highscore-num");
   scoreEl.innerText = score;
   highScoreEl.innerText = highScore;
 };
 
+mode.addEventListener("click", setMode);
+
+let loopIndex = 0;
+
+cards.forEach((card) => {
+  card.addEventListener("click", cardIndexHandler.bind(self, loopIndex));
+  loopIndex++;
+  card.addEventListener("click", removeListenerHandler);
+  card.addEventListener("click", cardSelectHandler);
+});
+
+shuffle();
