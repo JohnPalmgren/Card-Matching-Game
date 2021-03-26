@@ -1,61 +1,66 @@
 <!-- https://www.flaticon.com/free-icon/css_919826 -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="main.css" />
-    <script src="script.js" defer></script>
-    <title>Memory game</title>
-  </head>
-  <body>
-    <h1>Memory game</h1>
-    <div id="your-time" class="text">Your time: <span id="time">00:00:00</span></div>
-    <div class="container">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="main.css" />
+  <script src="script.js" defer></script>
+  <title>Memory game</title>
+</head>
+<body>
+  <div id="page-container">
+    <div id="content-wrap">
 
-    
-    <select id="mode">
-      <option value="easy">Easy</option>
-      <option value="medium">Medium</option>
-      <option value="hard">Hard</option>
-    </select>
+      <h1>Memory game</h1>
+      <div id="your-time" class="text">Your time: <span id="time">00:00:00</span></div>
+      <div class="container">
 
-        <div id="score" class="text">Your score: 
-        <span id="score-num">0</span>
+      
+      <select id="mode">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+
+          <div id="score" class="text">Your score: 
+          <span id="score-num">0</span>
+        </div>
+        <div id="highscore" class="text">Highscore: 
+          <span id="highscore-num">0</span>
+        </div>
       </div>
-      <div id="highscore" class="text">Highscore: 
-        <span id="highscore-num">0</span>
+      <div id="cards">
+        <div class="html background card" id="html-a"></div>
+        <div class="html background card" id="html-b"></div>
+        <div class="css background card" id="css-a"></div>
+        <div class="css background card" id="css-b"></div>
+        <div class="js background card" id="js-a"></div>
+        <div class="js background card" id="js-b"></div>
+        <div class="sass background card" id="sass-a"></div>
+        <div class="sass background card" id="sass-b"></div>
+        <div class = "node hidden medium background card" id="node-a"></div>
+        <div class = "node hidden medium background card" id="node-b"></div>
+        <div class = "react hidden medium background card" id="react-a"></div>
+        <div class = "react hidden medium background card" id="react-b"></div>
+        <div class = "ruby hidden hard background card" id="ruby-a"></div>
+        <div class = "ruby hidden hard background card" id="ruby-b"></div>   
+        <div class = "python hidden hard background card" id="python-a"></div>
+        <div class = "python hidden hard background card" id="python-b"></div>    
       </div>
     </div>
-    <div id="cards">
-      <div class="html background card" id="html-a"></div>
-      <div class="html background card" id="html-b"></div>
-      <div class="css background card" id="css-a"></div>
-      <div class="css background card" id="css-b"></div>
-      <div class="js background card" id="js-a"></div>
-      <div class="js background card" id="js-b"></div>
-      <div class="sass background card" id="sass-a"></div>
-      <div class="sass background card" id="sass-b"></div>
-      <div class = "node hidden medium background card" id="node-a"></div>
-      <div class = "node hidden medium background card" id="node-b"></div>
-      <div class = "react hidden medium background card" id="react-a"></div>
-      <div class = "react hidden medium background card" id="react-b"></div>
-      <div class = "ruby hidden hard background card" id="ruby-a"></div>
-      <div class = "ruby hidden hard background card" id="ruby-b"></div>   
-      <div class = "python hidden hard background card" id="python-a"></div>
-      <div class = "python hidden hard background card" id="python-b"></div>    
-    </div>
-    <!-- <footer>
+    <footer>
         <div>Icons made by <a href="https://www.freepik.com" 
             title="Freepik">Freepik</a> from 
             <a href="https://www.flaticon.com/" 
             title="Flaticon">www.flaticon.com</a></div>
-    </footer> -->
-  </body>
+    </footer>
+</div>
+</body>
 </html>

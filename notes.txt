@@ -1,2 +1,2 @@
-fix bug -- click on turned over card for turned
-need to get rid of bind. alternative could be to create indexed card object. 
+add footer
+add media queries

@@ -128,3 +128,78 @@ h1 {
     background-repeat: repeat;
     background-position: initial;
 }
+
+#page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
+#content-wrap {
+    padding-bottom: 3.5rem
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    font-size: 0.7rem;
+    padding: 0.5rem;
+    margin-top: 1rem;
+    background-color: #c0c4be;
+    width: 100%;
+}
+
+@media (min-width: 445px) {
+
+    #mode{
+        position: static;
+    }
+
+}
+
+@media (min-width: 600px) {
+
+    h1 {
+        padding-top: 2rem;
+    }
+
+    #your-time {
+        display: block;
+        margin: auto;
+        max-width: 38rem;
+    }
+
+    .container {
+        width: 80%;
+        justify-content: space-around;
+        flex-wrap: nowrap;
+        margin: 1rem auto;
+    }
+    
+    
+    #mode {
+        margin:0;
+        position: static;
+    }
+    
+    #cards {
+        width: 80%;
+        margin: auto;
+        margin-top: 3rem;
+        max-width: 34.5rem;
+        /* max-width changed dynamically with JavaScript */
+    }
+
+    footer {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 1150px) {
+
+    .container {
+        max-width: 48rem;
+        margin: 3rem auto;
+    }
+
+}

@@ -23,8 +23,21 @@ let score = 0;
 let highScore = 0;
 let topScore = 5000;
 
+const mediaQuery = window.matchMedia('(min-width: 600px)');
+
+const changeCardsContainerSize = () => {
+  const cardContainer = document.getElementById("cards")
+  if (mediaQuery.matches && (mode.value === "medium" || mode.value === "hard")) {
+    cardContainer.style.maxWidth = "43rem"
+    console.log("condition met")
+  } else if (mediaQuery.matches) {
+    cardContainer.style.maxWidth = "34.5rem"
+  }
+};
+
 const changeCardSize = (size) => {
   // Only change card size if on mobile device
+  // and change container size on larger screens
   const maxWidth = window.matchMedia("(max-width: 425px)");
 
   if (maxWidth.matches) {
@@ -59,6 +72,7 @@ const setMode = () => {
   //turnery function??
   if (mode.value === "easy") {
     changeCardSize("large");
+    changeCardsContainerSize();
     numOfCards = 8;
     //turn into reusable function
     mediumCards.forEach((card) => {
@@ -71,6 +85,7 @@ const setMode = () => {
 
   if (mode.value === "medium") {
     changeCardSize("medium");
+    changeCardsContainerSize();
     numOfCards = 12;
     mediumCards.forEach((card) => {
       card.classList.remove("hidden");
@@ -82,6 +97,7 @@ const setMode = () => {
 
   if (mode.value === "hard") {
     changeCardSize("small");
+    changeCardsContainerSize();
     numOfCards = 16;
     mediumCards.forEach((card) => {
       card.classList.remove("hidden");
@@ -267,3 +283,16 @@ cards.forEach((card) => {
 });
 
 shuffle();
+
+
+  // increase max-width of cards container if in medium
+  // or hard mode. 
+  mediaQuery.addEventListener("change", event => {
+    const cardContainer = document.getElementById("cards")
+    if (event.matches && (mode.value === "medium" || mode.value === "hard")) {
+      cardContainer.style.maxWidth = "43rem"
+      console.log("condition met")
+    }
+  })
+
+
