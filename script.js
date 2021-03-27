@@ -1,5 +1,3 @@
-"use strict";
-
 const cards = document.querySelectorAll(".card");
 const mode = document.getElementById("mode");
 const timerText = document.getElementById("time");
@@ -8,12 +6,12 @@ let numOfCards = 8;
 let firstCard = true;
 let matched = false;
 let numMatched = 0;
-let cardOneType = null;
-let cardTwoType = null;
-let cardOne = null;
-let cardTwo = null;
-let currentIndex = null;
-let removeListener = null;
+let cardOneType;
+let cardTwoType;
+let cardOne;
+let cardTwo;
+let currentIndex;
+let removeListener;
 
 let startTime;
 let timeElapsed = 0;
@@ -21,94 +19,120 @@ let timerInterval;
 
 let score = 0;
 let highScore = 0;
-let topScore = 5000;
+const topScore = 5000;
 
-const mediaQuery = window.matchMedia('(min-width: 600px)');
+const mediaQuery = window.matchMedia("(min-width: 600px)");
 
+/** Change container size based on screen size and mode.*/
 const changeCardsContainerSize = () => {
-  const cardContainer = document.getElementById("cards")
-  if (mediaQuery.matches && (mode.value === "medium" || mode.value === "hard")) {
-    cardContainer.style.maxWidth = "43rem"
-    console.log("condition met")
+  const cardContainer = document.getElementById("cards");
+  if (
+    mediaQuery.matches &&
+    (mode.value === "medium" || mode.value === "hard")
+  ) {
+    cardContainer.style.maxWidth = "43rem";
   } else if (mediaQuery.matches) {
-    cardContainer.style.maxWidth = "34.5rem"
+    cardContainer.style.maxWidth = "34.5rem";
   }
 };
+// increase max-width of cards container if in medium or hard mode.
+mediaQuery.addEventListener("change", (event) => {
+  const cardContainer = document.getElementById("cards");
+  if (event.matches && (mode.value === "medium" || mode.value === "hard")) {
+    cardContainer.style.maxWidth = "43rem";
+  }
+});
 
+/**
+ * Change card size if on mobile device (small screen).
+ * @param {string} size Size of the card: 'small', 'medium' or 'large'.
+ */
 const changeCardSize = (size) => {
-  // Only change card size if on mobile device
-  // and change container size on larger screens
   const maxWidth = window.matchMedia("(max-width: 425px)");
 
   if (maxWidth.matches) {
-    // can I use switch case?
-    if (size === "large") {
-      cards.forEach((card) => {
-        card.style.width = "6rem";
-        card.style.height = "8rem";
-      });
-    }
+    switch (size) {
+      case "large":
+        cards.forEach((card) => {
+          card.style.width = "6rem";
+          card.style.height = "8rem";
+        });
+        break;
 
-    if (size === "medium") {
-      cards.forEach((card) => {
-        card.style.width = "4rem";
-        card.style.height = "6rem";
-      });
-    }
+      case "medium":
+        cards.forEach((card) => {
+          card.style.width = "4rem";
+          card.style.height = "6rem";
+        });
+        break;
 
-    if (size === "small") {
-      cards.forEach((card) => {
-        card.style.width = "3rem";
-        card.style.height = "5rem";
-      });
+      case "small":
+        cards.forEach((card) => {
+          card.style.width = "3rem";
+          card.style.height = "5rem";
+        });
     }
   }
 };
 
-const setMode = () => {
+/**
+ * Display or hide additional cards based on difficulty level.
+ * @param {boolean} medium True displays medium cards, false hides them.
+ * @param {boolean} hard True displays hard cards, false hides them.
+ */
+const changeCardVisibility = (medium, hard) => {
   const mediumCards = document.querySelectorAll(".medium");
   const hardCards = document.querySelectorAll(".hard");
 
-  //turnery function??
-  if (mode.value === "easy") {
-    changeCardSize("large");
-    changeCardsContainerSize();
-    numOfCards = 8;
-    //turn into reusable function
-    mediumCards.forEach((card) => {
-      card.classList.add("hidden");
-    });
-    hardCards.forEach((card) => {
-      card.classList.add("hidden");
-    });
-  }
+  medium
+    ? mediumCards.forEach((card) => {
+        card.classList.remove("hidden");
+      })
+    : mediumCards.forEach((card) => {
+        card.classList.add("hidden");
+      });
 
-  if (mode.value === "medium") {
-    changeCardSize("medium");
-    changeCardsContainerSize();
-    numOfCards = 12;
-    mediumCards.forEach((card) => {
-      card.classList.remove("hidden");
-    });
-    hardCards.forEach((card) => {
-      card.classList.add("hidden");
-    });
-  }
+  hard
+    ? hardCards.forEach((card) => {
+        card.classList.remove("hidden");
+      })
+    : hardCards.forEach((card) => {
+        card.classList.add("hidden");
+      });
+};
 
-  if (mode.value === "hard") {
-    changeCardSize("small");
-    changeCardsContainerSize();
-    numOfCards = 16;
-    mediumCards.forEach((card) => {
-      card.classList.remove("hidden");
-    });
-    hardCards.forEach((card) => {
-      card.classList.remove("hidden");
-    });
+/** Change display based on difficulty mode.*/
+const setMode = () => {
+  const localMode = mode.value;
+
+  switch (localMode) {
+    case "easy":
+      changeCardSize("large");
+      changeCardsContainerSize();
+      changeCardVisibility(false, false);
+      numOfCards = 8;
+      break;
+
+    case "medium":
+      changeCardSize("medium");
+      changeCardsContainerSize();
+      changeCardVisibility(true, false);
+      numOfCards = 12;
+      break;
+
+    case "hard":
+      changeCardSize("small");
+      changeCardsContainerSize();
+      changeCardVisibility(true, true);
+      numOfCards = 16;
   }
   shuffle();
 };
 
+/**
+ *  Return array of unique numbers from 0 to number
+ *  stored in numOfCards variable.
+ */
 const cardOrder = () => {
   const order = new Set();
   while (order.size < numOfCards) {
@@ -117,6 +141,7 @@ const cardOrder = () => {
   return Array.from(order);
 };
 
+/** Change the order that the cards are displayed */
 const shuffle = () => {
   const orderList = cardOrder();
   let count = 0;
@@ -126,12 +151,17 @@ const shuffle = () => {
   });
 };
 
+/**
+ * Check if the first and second card selected match.
+ * @param {string} cardName id of second card element selected.
+ * @param {string} cardType type of second card selected.
+ * @returns {boolean} true if cards match, else false.
+ */
 const checkMatch = (cardName, cardType) => {
   cardTwoType = cardType;
   cardTwo = document.getElementById(cardName);
   if (cardOneType === cardTwoType) {
-    // Keep cards displayed
-
+    // Keep cards displayed.
     cardOne.classList.remove("background");
     cardTwo.classList.remove("background");
     matched = true;
@@ -144,18 +174,20 @@ const checkMatch = (cardName, cardType) => {
   }
 };
 
+/**
+ * Assign values to global variables based on card clicked and toggle
+ * background class based on if it's the first or second card clicked
+ */
 const displayCard = () => {
   const cardName = cards[currentIndex].id;
   const cardType = cards[currentIndex].className.split(" ", 1).toString();
   const card = document.getElementById(cardName);
-
   if (firstCard) {
-    // if cards not null hide revealed cards
     if (cardOne && cardTwo && !matched) {
+      // If not first turn and not matched hide revealed cards.
       cardOne.classList.add("background");
       cardTwo.classList.add("background");
     }
-
     cardOneType = cardType;
     cardOne = card;
     card.classList.remove("background");
@@ -170,6 +202,7 @@ const displayCard = () => {
   }
 };
 
+/** If all cards are matched display time & score and reset variables. */
 const gameReset = () => {
   if (numMatched === numOfCards / 2) {
     stopTimer();
@@ -189,15 +222,19 @@ const gameReset = () => {
   }
 };
 
+/** Handle click event for cards. Start timer if start of game & display card*/
 const cardSelectHandler = () => {
   if (!cardOne) {
     startTimer();
-    displayTime();
   }
   displayCard();
   gameReset();
 };
 
+/**
+ * remove CardSelectHandler event listener on global cardOne and cardTwo
+ * when removeListener is true.
+ */
 const removeListenerHandler = () => {
   if (removeListener) {
     cardOne.removeEventListener("click", cardSelectHandler);
@@ -206,8 +243,13 @@ const removeListenerHandler = () => {
   removeListener = false;
 };
 
+/**
+ * Set global currentIndex variable to index parameter.
+ * @param {number} index index number of current card.
+ */
 const cardIndexHandler = (index) => (currentIndex = index);
 
+/** Record time elapsed since calling this function */
 const startTimer = () => {
   startTime = Date.now();
   timerInterval = setInterval(() => {
@@ -216,8 +258,15 @@ const startTimer = () => {
   }, 10);
 };
 
+/** clear interval on timerInterval variable to stop timer */
 const stopTimer = () => clearInterval(timerInterval);
 
+/**
+ * Convert time in milliseconds to string in 00:00:00 format
+ * @param {number} time time elapsed in milliseconds
+ * @returns {string} number converted to string in minutes,
+ *                   seconds and hundredths of second format
+ */
 const timeFormat = (time) => {
   const hrs = time / 3600000;
   const hh = Math.floor(hrs);
@@ -238,10 +287,15 @@ const timeFormat = (time) => {
   return `${formattedMM}:${formattedSS}:${formattedMS}`;
 };
 
+/**
+ * update DOM timerText element with formatted time.
+ * @param {number} time time elapsed in milliseconds
+ */
 const displayTime = (time) => {
   timerText.innerText = timeFormat(time);
 };
 
+/** Update global score variable. */
 const getScore = () => {
   let devisor;
   if (mode.value === "easy") {
@@ -251,17 +305,18 @@ const getScore = () => {
   } else {
     devisor = 18;
   }
-
   const num = Math.round(timeElapsed / devisor);
   score = topScore - num;
 };
 
+/** Update global highScore variable */
 const getHighScore = () => {
   if (score > highScore) {
     highScore = score;
   }
 };
 
+/** update scoreEL and highscoreEL elements in DOM with scores variables. */
 const displayScore = () => {
   getScore();
   getHighScore();
@@ -274,25 +329,10 @@ const displayScore = () => {
 mode.addEventListener("click", setMode);
 
 let loopIndex = 0;
-
 cards.forEach((card) => {
   card.addEventListener("click", cardIndexHandler.bind(self, loopIndex));
   loopIndex++;
   card.addEventListener("click", removeListenerHandler);
   card.addEventListener("click", cardSelectHandler);
 });
-
 shuffle();
-
-
-  // increase max-width of cards container if in medium
-  // or hard mode. 
-  mediaQuery.addEventListener("change", event => {
-    const cardContainer = document.getElementById("cards")
-    if (event.matches && (mode.value === "medium" || mode.value === "hard")) {
-      cardContainer.style.maxWidth = "43rem"
-      console.log("condition met")
-    }
-  })
-
-

@@ -13,14 +13,12 @@ h1 {
     text-align: center;
     color: #fff;
     padding-top: 1rem;
-    
 }
 
 
 #time {
     display: inline-block;
     width: 40%;
-
 }
 
 .text {
@@ -49,8 +47,6 @@ h1 {
     margin: auto;
     position: relative;
     top: 1rem;
-    /* vertical-align: middle;
-    align-self: center; */
 }
 
 #score,
